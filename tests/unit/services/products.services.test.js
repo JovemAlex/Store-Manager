@@ -14,6 +14,15 @@ describe('Testes de unidade do services de products', function () {
 
       expect(result.message).to.deep.equal(products);
     });
+
+    it('Retorna um erro ao não encontrar o produto', async function () {
+      sinon.stub(productsModel, 'getAll').resolves(undefined);
+
+      const result = await productServices.getAll();
+
+      expect(result.type).to.equal('LIST_NOT_FOUND');
+      expect(result.message).to.equal('List not found');
+    });
   });
 
   describe('Listagem de produtos a partir do ID', function () {

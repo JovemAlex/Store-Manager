@@ -31,6 +31,23 @@ describe('Teste de unidade do controller de products', function () {
       expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith([]);
     });
+
+    it('Retorna um erro ao não encontrar os produtos', async function () {
+      const res = {};
+      const req = {};
+
+      res.status = sinon.stub().returns(res)
+      res.json = sinon.stub().returns();
+
+      sinon
+        .stub(productServices, 'getAll')
+        .resolves({ type: 'LIST_NOT_FOUND', message: 'List not found' });
+      
+      await productsController.getAll(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+    });
+    afterEach(sinon.restore);
   });
 
   describe('Rescupera produto a partir do ID', function () {
@@ -46,7 +63,7 @@ describe('Teste de unidade do controller de products', function () {
       res.json = sinon.stub().returns();
 
       sinon
-        .stub(productServices, "getById")
+        .stub(productServices, 'getById')
         .resolves(happyControllerResponseGetByIdProducts);
       
       
@@ -55,5 +72,27 @@ describe('Teste de unidade do controller de products', function () {
       expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith(happyResponseByIdProducts);
     });
+    
+    it('Retorna um erro ao passar um ID inexistente', async function () {
+      const res = {};
+      const req = {
+        params: {
+          id: 10,
+        },
+      };
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      sinon
+        .stub(productServices, 'getById')
+        .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+      
+      
+      await productsController.getById(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+    });
+    afterEach(sinon.restore);
   });
 });

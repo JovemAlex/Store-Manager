@@ -3,8 +3,9 @@ const { validateId } = require('./validations/validationsInputValues');
 
 const getAll = async () => {
   const result = await productsModel.getAll();
+  if (result) return { type: null, message: result };
 
-  return { type: null, message: result };
+  return { type: 'LIST_NOT_FOUND', message: 'List not found' };
 };
 
 const getById = async (id) => {
