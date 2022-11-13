@@ -11,6 +11,8 @@ const productsController = require('../../../src/controllers/products.controller
 const {
   happyControllerResponseGetByIdProducts,
   happyResponseByIdProducts,
+  happyControllerResponseCreateProduct,
+  happyResponseCreateProduct,
 } = require("./mocks/products.controller.mock");
 
 describe('Teste de unidade do controller de products', function () {
@@ -95,4 +97,49 @@ describe('Teste de unidade do controller de products', function () {
     });
     afterEach(sinon.restore);
   });
+
+  describe('Criação de um novo produto', function () {
+    afterEach(sinon.restore);
+    it('produto é criado corretamente', async function () {
+      const res = {};
+      const req = {
+        body: {
+          name: "teste",
+        },
+      };
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      sinon
+        .stub(productServices, 'createProduct')
+        .resolves(happyControllerResponseCreateProduct);
+      
+      await productsController.createProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(201);
+    });
+
+    it('Retorna um erro ao passar um nome inválido', async function () {
+      const res = {};
+      const req = {
+        body: {
+          name: 1,
+        },
+      };
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      sinon
+        .stub(productServices, 'createProduct')
+        .resolves({ type: 'INVALID_VALUE', message: '"value" must be a string' });
+      
+      await productsController.createProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(422);
+      expect(res.json).to.have.been.calledWith({ message: '"value" must be a string' });
+    });
+  });
+  afterEach(sinon.restore);
 });

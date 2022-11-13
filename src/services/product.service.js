@@ -1,5 +1,5 @@
 const { productsModel } = require('../models');
-const { validateId } = require('./validations/validationsInputValues');
+const { validateId, validateName } = require('./validations/validationsInputValues');
 
 const getAll = async () => {
   const result = await productsModel.getAll();
@@ -19,9 +19,13 @@ const getById = async (id) => {
 };
 
 const createProduct = async (name) => {
-  const result = await productsModel.createProduct(name);
+  const error = validateName(name);
+  if (error.type) return error;
 
-  return { type: null, message: result };
+  const result = await productsModel.createProduct(name);
+  if (result) return { type: null, message: result };
+
+  return { type: 'PRODUCT_NOT_CREATED', message: 'Product not created' };
 };
 
 module.exports = {

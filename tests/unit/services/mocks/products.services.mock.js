@@ -1,4 +1,5 @@
 const invalidValue = 'a';
+const validValue = 'teste'
 
 const products = [
   {
@@ -15,7 +16,16 @@ const products = [
   }
 ]
 
+const createdProduct = [
+  {
+    "id": 4,
+    "name": "teste"
+  }
+]
+
 module.exports = {
   products,
   invalidValue,
+  createdProduct,
+  validValue,
 }

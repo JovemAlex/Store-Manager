@@ -1,3 +1,5 @@
+//GET BY ID:
+
 const happyControllerResponseGetByIdProducts = {
   type: null,
   message: {
@@ -11,7 +13,24 @@ const happyResponseByIdProducts = {
   name: "Martelo de Thor",
 };
 
+// CREATE PRODUCTS:
+
+const happyControllerResponseCreateProduct = {
+  type: null,
+  message: {
+    id: 4,
+    name: "teste",
+  },
+};
+
+const happyResponseCreateProduct = {
+  id: 4,
+  name: "teste",
+};
+
 module.exports = {
   happyControllerResponseGetByIdProducts,
   happyResponseByIdProducts,
+  happyControllerResponseCreateProduct,
+  happyResponseCreateProduct,
 };
