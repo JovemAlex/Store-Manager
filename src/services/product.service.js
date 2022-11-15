@@ -28,8 +28,25 @@ const createProduct = async (name) => {
   return { type: 'PRODUCT_NOT_CREATED', message: 'Product not created' };
 };
 
+const updateProduct = async (id, name) => {
+  const errorId = validateId(id);
+  if (errorId.type) return errorId;
+
+  const errorName = validateName(name);
+  if (errorName.type) return errorName;
+
+  const doesProductExists = await productsModel.getById(id);
+  if (doesProductExists) {
+    const result = await productsModel.updateProduct(id, name);
+    if (result) return { type: null, message: result };
+  }
+
+  return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+};
+
 module.exports = {
   getAll,
   getById,
   createProduct,
+  updateProduct,
 };
