@@ -23,9 +23,17 @@ const createdProduct = [
   }
 ]
 
+const updateProduct = [
+  {
+    "id": 1,
+    "name": "Martelo do Batman"
+  }
+]
+
 module.exports = {
   products,
   invalidValue,
   createdProduct,
   validValue,
+  updateProduct,
 }

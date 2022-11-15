@@ -13,6 +13,7 @@ const {
   happyResponseByIdProducts,
   happyControllerResponseCreateProduct,
   happyResponseCreateProduct,
+  happyResponseUpdateProduct,
 } = require("./mocks/products.controller.mock");
 
 describe('Teste de unidade do controller de products', function () {
@@ -141,5 +142,55 @@ describe('Teste de unidade do controller de products', function () {
       expect(res.json).to.have.been.calledWith({ message: '"value" must be a string' });
     });
   });
+
+  describe('Edita um produto', function () {
+    it('Edita um produto com sucesso', async function () {
+      const res = {};
+      const req = {
+        params: {
+          id: 1
+        },
+        body: {
+          name: 'Martelo do Batman',
+        },
+      };
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      sinon
+        .stub(productServices, 'updateProduct')
+        .resolves(happyResponseUpdateProduct);
+      
+      await productsController.updateProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(200);
+    });
+
+    it('Retorna um erro ao passar um ID inexistente', async function () {
+      const res = {};
+      const req = {
+        params: {
+          id: 80
+        },
+        body: {
+          name: 'Martelo do Batman',
+        },
+      };
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      sinon
+        .stub(productServices, 'updateProduct')
+        .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+      
+      await productsController.updateProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
+    });
+  });
+
   afterEach(sinon.restore);
 });

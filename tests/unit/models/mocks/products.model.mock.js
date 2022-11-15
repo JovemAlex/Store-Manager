@@ -20,7 +20,15 @@ const createdProduct = [
   }
 ]
 
+const productUpdated = [
+  {
+    "id": 1,
+    "name": "Martelo do Batman"
+  }
+]
+
 module.exports = {
   products,
   createdProduct,
+  productUpdated,
 }

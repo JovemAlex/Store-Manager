@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const { productsModel } = require('../../../src/models');
 const { productServices } = require('../../../src/services');
 
-const { products, invalidValue, createdProduct, validValue } = require('./mocks/products.services.mock');
+const { products, invalidValue, createdProduct, validValue, updateProduct } = require('./mocks/products.services.mock');
 
 describe('Testes de unidade do services de products', function () {
   describe('Listagem de produtos', function () {
@@ -79,14 +79,61 @@ describe('Testes de unidade do services de products', function () {
       const result = await productServices.createProduct(1);
 
       expect(result.type).to.equal('INVALID_VALUE');
-      expect(result.message).to.equal('"value" must be a string');
+      expect(result.message).to.equal('"name" must be a string');
     });
 
     it('Retorna um erro ao não passar o name', async function () {
       const result = await productServices.createProduct(invalidValue);
 
       expect(result.type).to.equal('INVALID_VALUE');
-      expect(result.message).to.equal('"value" length must be at least 5 characters long');
+      expect(result.message).to.equal('"name" length must be at least 5 characters long');
     });
   });
+
+  describe('Edita um produto', function () {
+    afterEach(sinon.restore);
+    it('Retorna um erro ao passar um produto que não existir', async function () {
+      sinon.stub(productsModel, 'updateProduct').resolves(undefined);
+
+      const id = 80;
+      const name = "Martelo do Batman";
+
+      const result = await productServices.updateProduct(id, name);
+
+      expect(result.type).to.equal('PRODUCT_NOT_FOUND');
+      expect(result.message).to.be.deep.equal('Product not found');
+    });
+
+    it('Retorna um erro ao passar um ID inválido', async function () {
+      const id = "a";
+      const name = "Martelo do Batman";
+
+      const result = await productServices.updateProduct(id, name);
+
+      expect(result.type).to.equal('INVALID_VALUE');
+      expect(result.message).to.be.deep.equal('"id" must be a number');
+    });
+
+    it('Retorna um erro ao passar um name inválido', async function () {
+      const id = 1;
+      const name = 1;
+
+      const result = await productServices.updateProduct(id, name);
+
+      expect(result.type).to.equal('INVALID_VALUE');
+      expect(result.message).to.be.deep.equal('"name" must be a string');
+    });
+
+    it('Produto é editado com sucesso', async function () {
+      sinon.stub(productsModel, 'updateProduct').resolves([updateProduct]);
+
+      const id = 1;
+      const name = 'Martelo do Batman';
+
+      const result = await productServices.updateProduct(id, name);
+      
+      expect(result.type).to.be.equal(null);
+      expect(result.message).to.be.deep.equal([updateProduct]);
+    });
+  })
 });
