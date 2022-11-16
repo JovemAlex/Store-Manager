@@ -144,6 +144,7 @@ describe('Teste de unidade do controller de products', function () {
   });
 
   describe('Edita um produto', function () {
+    afterEach(sinon.restore);
     it('Edita um produto com sucesso', async function () {
       const res = {};
       const req = {
@@ -188,6 +189,43 @@ describe('Teste de unidade do controller de products', function () {
       await productsController.updateProduct(req, res);
 
       expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
+    });
+  });
+
+  describe('Deleta um produto', function () {
+    afterEach(sinon.restore);
+    it('deleta um produto corretamente', async function () {
+      sinon
+        .stub(productServices, 'deleteProduct')
+        .resolves({ type: null });
+
+        const res = {};
+        const req = { params: { id: 1 } };
+
+      res.status = sinon.stub().returns(res);
+      res.end = sinon.stub().returns();
+
+      await productsController.deleteProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith(204);
+      expect(res.end).to.have.been.calledWith();
+    });
+
+    it('retorna um erro ao tentar deletar o produto inexistente', async function () {
+      sinon
+        .stub(productServices, 'deleteProduct')
+        .returns({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+      const res = {};
+      const req = { params: { id: 10 } };
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+
+      await productsController.deleteProduct(req, res);
+
+      expect(res.status).to.have.been.calledWith('PRODUCT_NOT_FOUND');
       expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
     });
   });
