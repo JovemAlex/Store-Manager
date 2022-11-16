@@ -153,7 +153,7 @@ describe('Testes de unidade do services de products', function () {
 
       const result = await productServices.deleteProduct(4);
 
-      expect(result.type).to.be.equal('PRODUCT_NOT_FOUND');
+      expect(result.type).to.be.equal(404);
       expect(result.message).to.equal('Product not found');
     });
 
