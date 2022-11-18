@@ -15,8 +15,6 @@ const getById = async (id) => {
     [id],
   );
 
-  console.log(result);
-
   return camelize(result);
 };
 

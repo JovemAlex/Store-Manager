@@ -8,7 +8,7 @@ const createSale = async (sales) => {
     if (productExists === undefined) error.push(productExists);
   }));
 
-  if (error.length > 0) return { type: 404, message: 'Product not found' };
+  if (error.length) return { type: 404, message: 'Product not found' };
 
   const saleId = await salesModel.insertSale();
 

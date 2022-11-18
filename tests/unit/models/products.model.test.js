@@ -37,12 +37,10 @@ describe('Testes de unidade do model de products', function () {
   it('Edita um produto com sucesso', async function () {
     sinon.stub(connection, 'execute').resolves(productUpdated);
     
-    const id = 1; 
+    const id = 1;
     const update = { name: "Martelo do batman" };
 
     const result = await productsModel.updateProduct(id, update);
-
-    console.log(result.affectedRows);
 
     expect(result).to.be.deep.equal({ id, name: update });
   });
@@ -54,6 +52,6 @@ describe('Testes de unidade do model de products', function () {
       const result = await productsModel.deleteProduct(1);
 
       expect(result).to.equal();
-    })
-  })
-})
+    });
+  });
+});
