@@ -1,3 +1,4 @@
+const camelize = require('camelize');
 const connection = require('./connection');
 
 const insertSale = async () => {
@@ -16,7 +17,31 @@ const createSale = async (id, { productId, quantity }) => {
   return object;
 };
 
+const getSaleDateById = async (id) => {
+  const [[result]] = await connection.execute(
+    `SELECT date FROM StoreManager.sales WHERE id = ${id}`,
+  );
+  return result;
+};
+
+const getSalesById = async (id) => {
+  const [result] = await connection.execute(
+    `SELECT * FROM StoreManager.sales_products WHERE sale_id = ${id}`,
+  );
+  return camelize(result);
+};
+
+const getAllSales = async () => {
+  const [result] = await connection.execute(
+    'SELECT * FROM StoreManager.sales_products',
+  );
+  return camelize(result);
+};
+
 module.exports = {
   createSale,
   insertSale,
+  getSaleDateById,
+  getAllSales,
+  getSalesById,
 };
